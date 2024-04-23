@@ -6,7 +6,7 @@ const App = () => {
       <Router>
          <Routes>
             <Route path={HOME} element={<div>home</div>} />
-            <Route path={NOT_FOUND} element={<div>not_found</div>} />
+            <Route path={NOT_FOUND} element={<div>not found</div>} />
          </Routes>
       </Router>
    );
