@@ -15,10 +15,9 @@ export default function ItemCard({
   cardPrice: string;
 }) {
   return (
-    <Link to="#" style={{textDecoration: 'none'}}>
+    <Link to="#" style={{ textDecoration: 'none', minWidth: 240 }}>
       <Card
         sx={{
-          maxWidth: 345,
           backgroundColor: 'white',
           boxShadow: '0px 0px 5px 0px rgba(122,120,122,1)',
           borderRadius: 2,

@@ -6,6 +6,7 @@ export const CategoryBox = ({ categoryName }: { categoryName: string }) => {
   return (
     <Box
       sx={{
+        maxWidth: '1680px',
         marginTop: 2,
         padding: 3,
         border: 1.5,
@@ -35,7 +36,7 @@ export const CategoryBox = ({ categoryName }: { categoryName: string }) => {
         >
           {categoryName}
         </Typography>
-        <Link to='#top' onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <Link to='#top' onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{textDecoration: 'none', color: '#000'}}>
           <Typography variant="h6" component="h6" sx={{ fontSize: '14px' }}>
             View All Products{' '}
             <Box component="span" sx={{ color: 'red' }}>
@@ -49,14 +50,16 @@ export const CategoryBox = ({ categoryName }: { categoryName: string }) => {
       <Box
         sx={{
           padding: 2,
-          maxWidth: '1680px',
+          maxWidth: '1280px',
           display: 'flex',
           gap: 2,
-          overflow: 'hidden',
+          overflow: 'auto',
           justifyContent: 'space-between',
           alignItems: 'center',
         }}
       >
+        <ItemCard cardName="M276 ECU Tune" cardPrice="Start at C$ 1,425" />
+        <ItemCard cardName="M276 ECU Tune" cardPrice="Start at C$ 1,425" />
         <ItemCard cardName="M276 ECU Tune" cardPrice="Start at C$ 1,425" />
         <ItemCard cardName="M276 ECU Tune" cardPrice="Start at C$ 1,425" />
         <ItemCard cardName="M276 ECU Tune" cardPrice="Start at C$ 1,425" />
