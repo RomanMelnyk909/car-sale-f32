@@ -1,0 +1,6 @@
+// DECERMENT, INCERMENT, PLUS_NUMBER, RESET
+
+export const DECERMENT = 'DECERMENT';
+export const INCERMENT = 'INCERMENT';
+export const PLUS_NUMBER = 'PLUS_NUMBER';
+export const RESET = 'RESET';
