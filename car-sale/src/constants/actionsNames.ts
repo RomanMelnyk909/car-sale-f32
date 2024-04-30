@@ -1,0 +1,6 @@
+export enum actionNames {
+  INCREMENT = 'INCREMENT',
+  DECREMENT = 'DECREMENT',
+  PLUS_NUMBER = 'PLUS_NUMBER',
+  RESET = 'RESET',
+}
