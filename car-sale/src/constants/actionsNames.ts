@@ -1,6 +1,6 @@
-export enum actionNames {
-  INCREMENT = 'INCREMENT',
-  DECREMENT = 'DECREMENT',
-  PLUS_NUMBER = 'PLUS_NUMBER',
-  RESET = 'RESET',
-}
+// DECERMENT, INCERMENT, PLUS_NUMBER, RESET
+
+export const DECERMENT = 'DECERMENT';
+export const INCERMENT = 'INCERMENT';
+export const PLUS_NUMBER = 'PLUS_NUMBER';
+export const RESET = 'RESET';
