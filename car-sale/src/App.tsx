@@ -1,7 +1,7 @@
 
 import "./App.css";
 import NotFound from "./pages/NotFound/NotFound";
-import Home from './components/Home';
+import {Home} from './pages/Home1';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HOME, NOT_FOUND } from './constants/pathName';
 import './App.css';
