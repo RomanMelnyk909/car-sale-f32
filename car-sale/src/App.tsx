@@ -12,8 +12,8 @@ const App = () => {
       <Router>
          <Routes>
             <Route path={HOME} element={<Home />} />
-            <Route path={NOT_FOUND} element={<NotFound />} />
             <Route path={BLOG} element={<Blog />} />
+            <Route path={NOT_FOUND} element={<NotFound />} />
          </Routes>
       </Router>
    );
