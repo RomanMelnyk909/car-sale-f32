@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Box,
   IconButton,
@@ -12,20 +14,19 @@ import {
   Card,
   Button,
   Divider,
+  Modal,
+  TextField,
 } from "@mui/material";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Search } from "@mui/icons-material/";
-import { useState, useEffect } from "react";
+import { Search, ErrorOutline, AddCircleOutline } from "@mui/icons-material/";
 
+import styles from "./styles.module.css";
 import news1 from "../../assets/imgs/Blog/sidebar/news1.jpg";
 import news2 from "../../assets/imgs/Blog/sidebar/news2.jpg";
 import news3 from "../../assets/imgs/Blog/sidebar/news3.jpg";
 import card1 from "../../assets/imgs/Blog/cards/1.jpg";
 import card2 from "../../assets/imgs/Blog/cards/2.jpg";
 import card3 from "../../assets/imgs/Blog/cards/3.jpg";
-import Footer from "../../components/Footer/Footer";
-import styles from "./styles.module.css";
 import QueryLoader from "../../components/QueryLoader/QueryLoader";
 
 const theme = createTheme({
@@ -72,7 +73,6 @@ const theme = createTheme({
           fontFamily: '"Titillium Web", sans-serif',
           fontSize: 18,
           fontWeight: 500,
-          marginLeft: 5,
           backgroundColor: "#E24648",
           "&:hover": {
             backgroundColor: "#cd4743",
@@ -83,34 +83,10 @@ const theme = createTheme({
   },
 });
 
-const mockData = [
-  {
-    id: 1,
-    image: card1,
-    dateTimePublish: "27 Apr, 2024",
-    name: "Documents required for car rental",
-    text: "Lorem ipsum potenti fringilla pretium ipsum non blandit vivamus eget nisi non mi iaculis iaculis imperie quiseros sevin elentesque habitant morbi tristique senectus et netus et malesuada the fames ac turpis enesta mauris suscipit misnec est farmen.",
-    isShow: true,
-  },
-  {
-    id: 2,
-    image: card2,
-    dateTimePublish: "25 Apr, 2024",
-    name: "Rental cost of sport and other cars",
-    text: "Lorem ipsum potenti fringilla pretium ipsum non blandit vivamus eget nisi non mi iaculis iaculis imperie quiseros sevin elentesque habitant morbi tristique senectus et netus et malesuada the fames ac turpis enesta mauris suscipit misnec est farmen.",
-    isShow: true,
-  },
-  {
-    id: 3,
-    image: card3,
-    dateTimePublish: "23 Apr, 2024",
-    name: "Rental cars how to check driving fines?",
-    text: "Lorem ipsum potenti fringilla pretium ipsum non blandit vivamus eget nisi non mi iaculis iaculis imperie quiseros sevin elentesque habitant morbi tristique senectus et netus et malesuada the fames ac turpis enesta mauris suscipit misnec est farmen.",
-    isShow: true,
-  },
-];
-
 const ariaLabel = { "aria-label": "Search" };
+
+const defaulText: string =
+  "Lorem ipsum potenti fringilla pretium ipsum non blandit vivamus eget nisi non mi iaculis iaculis imperie quiseros sevin elentesque habitant morbi tristique senectus et netus et malesuada the fames ac turpis enesta mauris suscipit misnec est farmen.";
 
 interface Data {
   id: number;
@@ -139,9 +115,42 @@ function createData(
   };
 }
 
+const mockData: Data[] = [
+  {
+    id: 1,
+    image: card1,
+    dateTimePublish: "27 Apr, 2024",
+    name: "Documents required for car rental",
+    text: defaulText,
+    isShow: true,
+  },
+  {
+    id: 2,
+    image: card2,
+    dateTimePublish: "25 Apr, 2024",
+    name: "Rental cost of sport and other cars",
+    text: defaulText,
+    isShow: true,
+  },
+  {
+    id: 3,
+    image: card3,
+    dateTimePublish: "23 Apr, 2024",
+    name: "Rental cars how to check driving fines?",
+    text: defaulText,
+    isShow: true,
+  },
+];
+
 export default function Blog() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Data[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [newBlogData, setNewBlogData] = useState({
+    name: "",
+    text: "",
+    image: "",
+  });
 
   const blogsList: string = "https://roman.itstep.click/api/Blogs/list";
 
@@ -159,11 +168,10 @@ export default function Blog() {
 
           setData(result);
           setLoading(false);
-
-          console.log(result);
         }, 1000);
       } catch (error) {
         console.error("Error:", error);
+        setLoading(false);
       }
     };
 
@@ -181,6 +189,45 @@ export default function Blog() {
     )
   );
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+
+    setNewBlogData({
+      name: "",
+      text: "",
+      image: "",
+    });
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setNewBlogData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const generateUniqueId = () => uuidv4();
+
+  const handleAddPost = () => {
+    const newCardData = createData(
+      generateUniqueId(),
+      newBlogData.image,
+      new Date().toDateString(),
+      newBlogData.name,
+      newBlogData.text,
+      true
+    );
+
+    setData((prevState) => [...prevState, newCardData]);
+    handleCloseModal();
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -195,13 +242,149 @@ export default function Blog() {
           </Grid>
           <Grid container spacing={4}>
             <Grid item xs={8}>
-              <Box display='flex' justifyContent='space-between'>
-              <Typography variant="h4">Latest News</Typography>
-              <IconButton size="large"><AddCircleOutlineIcon fontSize='large'></AddCircleOutlineIcon></IconButton>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h4">Latest News</Typography>
+                <IconButton size="large" onClick={handleOpenModal}>
+                  <AddCircleOutline
+                    fontSize="large"
+                    sx={{ color: "#282828" }}
+                  />
+                </IconButton>
+                <Modal open={openModal} onClose={handleCloseModal}>
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      bgcolor: "background.paper",
+                      boxShadow: 24,
+                      p: 4,
+                      width: 400,
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <Typography variant="h6" gutterBottom>
+                      Add New Blog Post
+                    </Typography>
+                    <TextField
+                      name="name"
+                      label="Name"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={newBlogData.name}
+                      onChange={handleInputChange}
+                      sx={{
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#E24648",
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                          { borderColor: "#E24648" },
+                      }}
+                    />
+                    <TextField
+                      name="text"
+                      label="Text"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={newBlogData.text}
+                      onChange={handleInputChange}
+                      sx={{
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#E24648",
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                          { borderColor: "#E24648" },
+                      }}
+                    />
+                    <TextField
+                      name="image"
+                      label="Image URL"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={newBlogData.image}
+                      onChange={handleInputChange}
+                      sx={{
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#E24648",
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                          { borderColor: "#E24648" },
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      sx={{ mt: 2 }}
+                      onClick={handleAddPost}
+                    >
+                      Add
+                    </Button>
+                  </Box>
+                </Modal>
               </Box>
-              <Divider sx={{mt: 2, mb: 5, borderBottomWidth: 2, background: 'black' }} variant="fullWidth"/>
+              <Divider
+                sx={{ mt: 2, mb: 5, borderBottomWidth: 2, background: "black" }}
+                variant="fullWidth"
+              />
               <QueryLoader fetching={loading}>
-                {/* {cards.map((card) => {
+                {data.length > 0 ? (
+                  cards.map((card) => {
+                    return (
+                      <Card sx={{ maxWidth: "100%", mb: 4 }} key={card.id} className={styles.card}>
+                        <Box
+                          position="relative"
+                          overflow="hidden"
+                          height="450px"
+                        >
+                          <CardMedia
+                            component="img"
+                            image={card.image}
+                            alt="car"
+                            className={styles.centeredImage}
+                          />
+                        </Box>
+                        <CardContent>
+                          <Typography variant="caption">
+                            {card.dateTimePublish}
+                          </Typography>
+                          <Typography
+                            gutterBottom
+                            variant="h4"
+                            component="div"
+                            m="10px 0 15px"
+                          >
+                            {card.name}
+                          </Typography>
+                          <Typography variant="body1" color="text.secondary">
+                            {card.text}
+                          </Typography>
+                        </CardContent>
+                        <CardActions sx={{ pb: 4 }}>
+                          <Button variant="contained" size="large">
+                            Read More
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    );
+                  })
+                ) : (
+                  <Box textAlign="center">
+                    <ErrorOutline
+                      sx={{ fontSize: "50px", color: "text.secondary" }}
+                    />
+                    <Typography variant="h6" color="text.secondary">
+                      Oops..!
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      Something went wrong. Please try again later.
+                    </Typography>
+                  </Box>
+                )}
+
+                {/* {mockData.map((card) => {
                   return (
                     <Card sx={{ maxWidth: "100%", mb: 4 }} key={card.id}>
                       <Box style={{ position: "relative", overflow: "hidden" }}>
@@ -236,41 +419,6 @@ export default function Blog() {
                     </Card>
                   );
                 })} */}
-                {mockData.map((card) => {
-                  return (
-                    <Card sx={{ maxWidth: "100%", mb: 4 }} key={card.id}>
-                      <Box style={{ position: "relative", overflow: "hidden" }}>
-                        <CardMedia
-                          component="img"
-                          image={card.image}
-                          alt="car"
-                          className={styles.zoomImg}
-                        />
-                      </Box>
-                      <CardContent>
-                        <Typography variant="caption">
-                          {card.dateTimePublish}
-                        </Typography>
-                        <Typography
-                          gutterBottom
-                          variant="h4"
-                          component="div"
-                          m="10px 0 15px"
-                        >
-                          {card.name}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                          {card.text}
-                        </Typography>
-                      </CardContent>
-                      <CardActions sx={{ pb: 4 }}>
-                        <Button variant="contained" size="large">
-                          Read More
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  );
-                })}
               </QueryLoader>
             </Grid>
             <Grid item xs={4}>
@@ -464,7 +612,6 @@ export default function Blog() {
           </Grid>
         </Container>
       </ThemeProvider>
-      <Footer />
     </>
   );
 }
