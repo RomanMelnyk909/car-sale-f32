@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Box,
   IconButton,
@@ -11,292 +13,326 @@ import {
   CardContent,
   Card,
   Button,
+  Divider,
+  Modal,
+  TextField,
 } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Search, ErrorOutline, AddCircleOutline } from "@mui/icons-material/";
 
-import { Search } from "@mui/icons-material/";
-
-import banner from "../../assets/imgs/Blog/banner.jpg";
+import styles from "./styles.module.css";
 import news1 from "../../assets/imgs/Blog/sidebar/news1.jpg";
 import news2 from "../../assets/imgs/Blog/sidebar/news2.jpg";
 import news3 from "../../assets/imgs/Blog/sidebar/news3.jpg";
-import card1 from "../../assets/imgs/Blog/cards/1.jpg";
-import card2 from "../../assets/imgs/Blog/cards/2.jpg";
-import card3 from "../../assets/imgs/Blog/cards/3.jpg";
-import "../../App.css"
+import defaultImage from "../../assets/imgs/Blog/cards/1.jpg";
+import QueryLoader from "../../components/QueryLoader/QueryLoader";
+
+const theme = createTheme({
+  components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Titillium Web", sans-serif',
+          fontWeight: 500,
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Titillium Web", sans-serif',
+          fontWeight: 600,
+          fontSize: 18,
+          fontStyle: "normal",
+          color: "#282828",
+        },
+        h1: {
+          fontWeight: 700,
+          fontSize: 100,
+          textTransform: "uppercase",
+        },
+        h4: {
+          fontSize: 36,
+        },
+        h6: {
+          fontSize: 26,
+        },
+        caption: {
+          fontWeight: 400,
+          fontSize: "16px",
+          color: "#777",
+          marginLeft: "5px",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Titillium Web", sans-serif',
+          fontSize: 18,
+          fontWeight: 500,
+          backgroundColor: "#E24648",
+          "&:hover": {
+            backgroundColor: "#cd4743",
+          },
+        },
+      },
+    },
+  },
+});
 
 const ariaLabel = { "aria-label": "Search" };
 
+interface Data {
+  id: string;
+  slug: string;
+  image: string;
+  dateTimePublish: string;
+  name: string;
+  text: string;
+  isShow: boolean;
+}
+
+function createData(
+  id: string,
+  slug: string,
+  image: string,
+  dateTimePublish: string,
+  name: string,
+  text: string,
+  isShow: boolean
+): Data {
+  return {
+    id,
+    slug,
+    image,
+    dateTimePublish,
+    name,
+    text,
+    isShow,
+  };
+}
+
 function Blog() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<Data[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [newBlogData, setNewBlogData] = useState({
+    name: "",
+    text: "",
+  });
+
+  const blogsList: string = "https://roman.itstep.click/api/Blogs/list";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(blogsList);
+
+        if (!response.ok) {
+          throw new Error("Network response was not success.");
+        }
+
+        setTimeout(async () => {
+          const result = await response.json();
+
+          setData(result);
+          setLoading(false);
+        }, 1000);
+      } catch (error) {
+        console.error("Error:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const cards: Data[] = data.map((item) =>
+    createData(
+      item.id,
+      item.slug,
+      item.image,
+      item.dateTimePublish,
+      item.name,
+      item.text,
+      item.isShow
+    )
+  );
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+
+    setNewBlogData({
+      name: "",
+      text: "",
+    });
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setNewBlogData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleAddPost = () => {
+    const newCardData = createData(
+      uuidv4(),
+      newBlogData.name + newBlogData.text,
+      defaultImage,
+      new Date().toDateString(),
+      newBlogData.name,
+      newBlogData.text,
+      true
+    );
+
+    setData((prevState) => [...prevState, newCardData]);
+    handleCloseModal();
+  };
+
   return (
-      <Container maxWidth="lg" sx={{ mt: 2, color: "#282828" }}>
-        <Grid
-          container
-          bgcolor="#e7eded"
-          alignItems="center"
-          sx={{ height: "30vh", borderRadius: "5px" }}
-          mb={5}
-        >
-          <Grid item xs={12} md={7} textAlign="center">
-            <Typography variant="h1" textTransform="uppercase" fontWeight="600">
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="xl">
+        <Grid className={styles.banner} container>
+          <Grid item xs={12} md={7}>
+            <Typography variant="h1" align="center">
               Blog
             </Typography>
           </Grid>
-          <Grid
-            item
-            display={{ xs: "none", md: "block" }}
-            md={5}
-            sx={{
-              backgroundImage: `url(${banner})`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-              backgroundSize: "cover",
-              width: "30%",
-              height: "30vh",
-              position: "relative",
-              borderRadius: "5px",
-            }}
-          ></Grid>
+          <Grid item display={{ xs: "none", md: "block" }} md={5}></Grid>
         </Grid>
         <Grid container spacing={4}>
           <Grid item xs={8}>
-            <Card sx={{ maxWidth: "100%", mb: 4 }}>
-              <Box style={{ position: "relative", overflow: "hidden" }}>
-                <CardMedia
-                  component="img"
-                  image={card1}
-                  alt="car"
+            <Box display="flex" justifyContent="space-between">
+              <Typography variant="h4">Latest News</Typography>
+              <IconButton size="large" onClick={handleOpenModal}>
+                <AddCircleOutline fontSize="large" sx={{ color: "#282828" }} />
+              </IconButton>
+              <Modal open={openModal} onClose={handleCloseModal}>
+                <Box
                   sx={{
-                    transition: "transform .5s ease",
-                    "&:hover": {
-                      transform: "scale(1.1)",
-                    },
-                  }}
-                />
-              </Box>
-              <CardContent>
-                <Link
-                  variant="body2"
-                  overflow="hidden"
-                  underline="none"
-                  sx={{
-                    mr: "10px",
-                    cursor: "pointer",
-                    color: "inherit",
-                    transition: "all .2s ease-in",
-                    "&:hover": {
-                      color: "#E24648",
-                    },
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    width: 400,
+                    borderRadius: "5px",
                   }}
                 >
-                  Rent A Car,
-                </Link>
-                <Link
-                  variant="body2"
-                  overflow="hidden"
-                  underline="none"
-                  color="text.secondary"
-                  sx={{
-                    cursor: "pointer",
-                    transition: "all .2s ease-in",
-                    "&:hover": {
-                      color: "inherit",
-                    },
-                  }}
-                >
-                  27 Apr, 2024
-                </Link>
-                <Typography
-                  gutterBottom
-                  variant="h4"
-                  component="div"
-                  fontWeight="bold"
-                  m="15px 0"
-                >
-                  Documents required for car rental
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Lorem ipsum potenti fringilla pretium ipsum non blandit
-                  vivamus eget nisi non mi iaculis iaculis imperie quiseros
-                  sevin elentesque habitant morbi tristique senectus et netus et
-                  malesuada the fames ac turpis enesta mauris suscipit mis nec
-                  est farmen.
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ pb: 4 }}>
-                <Button
-                  variant="contained"
-                  size="medium"
-                  sx={{
-                    ml: 1,
-                    backgroundColor: "#E24648",
-                    "&:hover": {
-                      backgroundColor: "#cd4743",
-                    },
-                  }}
-                >
-                  Read More
-                </Button>
-              </CardActions>
-            </Card>
-            <Card sx={{ maxWidth: "100%", mb: 4 }}>
-              <Box style={{ position: "relative", overflow: "hidden" }}>
-                <CardMedia
-                  component="img"
-                  image={card2}
-                  alt="car"
-                  sx={{
-                    transition: "transform .5s ease",
-                    "&:hover": {
-                      transform: "scale(1.1)",
-                    },
-                  }}
-                />
-              </Box>
-              <CardContent>
-                <Link
-                  variant="body2"
-                  overflow="hidden"
-                  underline="none"
-                  sx={{
-                    mr: "10px",
-                    cursor: "pointer",
-                    color: "inherit",
-                    transition: "all .2s ease-in",
-                    "&:hover": {
-                      color: "#E24648",
-                    },
-                  }}
-                >
-                  Cars,
-                </Link>
-                <Link
-                  variant="body2"
-                  overflow="hidden"
-                  underline="none"
-                  color="text.secondary"
-                  sx={{
-                    cursor: "pointer",
-                    transition: "all .2s ease-in",
-                    "&:hover": {
-                      color: "inherit",
-                    },
-                  }}
-                >
-                  25 Apr, 2024
-                </Link>
-                <Typography
-                  gutterBottom
-                  variant="h4"
-                  component="div"
-                  fontWeight="bold"
-                  m="15px 0"
-                >
-                  Rental cost of sport and other cars
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Lorem ipsum potenti fringilla pretium ipsum non blandit
-                  vivamus eget nisi non mi iaculis iaculis imperie quiseros
-                  sevin elentesque habitant morbi tristique senectus et netus et
-                  malesuada the fames ac turpis enesta mauris suscipit mis nec
-                  est farmen.
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ pb: 4 }}>
-                <Button
-                  variant="contained"
-                  size="medium"
-                  sx={{
-                    ml: 1,
-                    backgroundColor: "#E24648",
-                    "&:hover": {
-                      backgroundColor: "#cd4743",
-                    },
-                  }}
-                >
-                  Read More
-                </Button>
-              </CardActions>
-            </Card>
-            <Card sx={{ maxWidth: "100%", mb: 4 }}>
-              <Box style={{ position: "relative", overflow: "hidden" }}>
-                <CardMedia
-                  component="img"
-                  image={card3}
-                  alt="car"
-                  sx={{
-                    transition: "transform .5s ease",
-                    "&:hover": {
-                      transform: "scale(1.1)",
-                    },
-                  }}
-                />
-              </Box>
-              <CardContent>
-                <Link
-                  variant="body2"
-                  overflow="hidden"
-                  underline="none"
-                  sx={{
-                    mr: "10px",
-                    cursor: "pointer",
-                    color: "inherit",
-                    transition: "all .2s ease-in",
-                    "&:hover": {
-                      color: "#E24648",
-                    },
-                  }}
-                >
-                  Battery,
-                </Link>
-                <Link
-                  variant="body2"
-                  overflow="hidden"
-                  underline="none"
-                  color="text.secondary"
-                  sx={{
-                    cursor: "pointer",
-                    transition: "all .2s ease-in",
-                    "&:hover": {
-                      color: "inherit",
-                    },
-                  }}
-                >
-                  23 Apr, 2024
-                </Link>
-                <Typography
-                  gutterBottom
-                  variant="h4"
-                  component="div"
-                  fontWeight="bold"
-                  m="15px 0"
-                >
-                  Rental cars how to check driving fines?
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Lorem ipsum potenti fringilla pretium ipsum non blandit
-                  vivamus eget nisi non mi iaculis iaculis imperie quiseros
-                  sevin elentesque habitant morbi tristique senectus et netus et
-                  malesuada the fames ac turpis enesta mauris suscipit mis nec
-                  est farmen.
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ pb: 4 }}>
-                <Button
-                  variant="contained"
-                  size="medium"
-                  color="warning"
-                  sx={{
-                    ml: 1,
-                    backgroundColor: "#E24648",
-                    "&:hover": {
-                      backgroundColor: "#cd4743",
-                    },
-                  }}
-                >
-                  Read More
-                </Button>
-              </CardActions>
-            </Card>
+                  <Typography variant="h6" gutterBottom>
+                    Add New Blog Post
+                  </Typography>
+                  <TextField
+                    name="name"
+                    label="Name"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={newBlogData.name}
+                    onChange={handleInputChange}
+                    sx={{
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#E24648",
+                      },
+                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                        { borderColor: "#E24648" },
+                    }}
+                  />
+                  <TextField
+                    name="text"
+                    label="Text"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={newBlogData.text}
+                    onChange={handleInputChange}
+                    sx={{
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#E24648",
+                      },
+                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                        { borderColor: "#E24648" },
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    sx={{ mt: 2 }}
+                    onClick={handleAddPost}
+                  >
+                    Add
+                  </Button>
+                </Box>
+              </Modal>
+            </Box>
+            <Divider
+              sx={{ mt: 2, mb: 5, borderBottomWidth: 2, background: "black" }}
+              variant="fullWidth"
+            />
+            <QueryLoader fetching={loading}>
+              {data.length > 0 ? (
+                cards.map((card) => {
+                  return (
+                    <Card
+                      sx={{ maxWidth: "100%", mb: 4 }}
+                      key={card.id}
+                      className={styles.card}
+                    >
+                      <Box position="relative" overflow="hidden" height="450px">
+                        <CardMedia
+                          component="img"
+                          image={defaultImage}
+                          alt="car"
+                          className={styles.centeredImage}
+                        />
+                      </Box>
+                      <CardContent>
+                        <Typography variant="caption">
+                          {card.dateTimePublish}
+                        </Typography>
+                        <Typography
+                          gutterBottom
+                          variant="h4"
+                          component="div"
+                          m="10px 0 15px"
+                        >
+                          {card.name}
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                          {card.text}
+                        </Typography>
+                      </CardContent>
+                      <CardActions sx={{ pb: 4 }}>
+                        <Button variant="contained" size="large">
+                          Read More
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  );
+                })
+              ) : (
+                <Box textAlign="center">
+                  <ErrorOutline
+                    sx={{ fontSize: "50px", color: "text.secondary" }}
+                  />
+                  <Typography variant="h6" color="text.secondary">
+                    Oops..!
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Something went wrong. Please try again later.
+                  </Typography>
+                </Box>
+              )}
+            </QueryLoader>
           </Grid>
           <Grid item xs={4}>
             <Box
@@ -333,7 +369,7 @@ function Blog() {
               border="1px solid #E0E0E0"
               mb={2}
             >
-              <Typography variant="h6" fontWeight={600} mb={2}>
+              <Typography variant="h6" mb={2}>
                 Recent Posts
               </Typography>
               <Box display="flex" mb={2}>
@@ -431,7 +467,7 @@ function Blog() {
               border="1px solid #E0E0E0"
               mb={2}
             >
-              <Typography variant="h6" fontWeight={600} mb={2}>
+              <Typography variant="h6" mb={2}>
                 Archives
               </Typography>
               <Box display="flex" flexDirection="column">
@@ -488,8 +524,8 @@ function Blog() {
           </Grid>
         </Grid>
       </Container>
+    </ThemeProvider>
   );
-};
+}
 
 export default Blog;
-
