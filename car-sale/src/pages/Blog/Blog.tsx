@@ -26,7 +26,7 @@ import "../../App.css"
 
 const ariaLabel = { "aria-label": "Search" };
 
-export default function Blog() {
+function Blog() {
   return (
       <Container maxWidth="lg" sx={{ mt: 2, color: "#282828" }}>
         <Grid
@@ -489,4 +489,7 @@ export default function Blog() {
         </Grid>
       </Container>
   );
-}
+};
+
+export default Blog;
+
