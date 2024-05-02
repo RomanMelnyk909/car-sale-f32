@@ -1,9 +1,11 @@
 
-import "./App.css";
+import './App.css';
 import NotFound from "./pages/NotFound/NotFound";
-import { Home } from './pages/Home1';
+import Home from './components/Home/Home';
+import Categories from './pages/Categories/Categories';
+import Blog from './pages/Blog';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { HOME, NOT_FOUND } from './constants/pathName';
+import { HOME, NOT_FOUND, BLOG, CATEGORIES } from './constants/pathName';
 import './App.css';
 import Header from "./components/Header/Header";
 const App = () => {
@@ -12,6 +14,8 @@ const App = () => {
          <Header />
          <Routes>
             <Route path={HOME} element={<Home />} />
+            <Route path={BLOG} element={<Blog />} />
+            <Route path={CATEGORIES} element={<Categories />}></Route>
             <Route path={NOT_FOUND} element={<NotFound />} />
          </Routes>
       </Router>
