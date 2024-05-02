@@ -7,17 +7,19 @@ import Blog from './pages/Blog';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HOME, NOT_FOUND, BLOG, CATEGORIES } from './constants/pathName';
 import './App.css';
-import Header from "./components/Header/Header";
+import MainLayout from './components/MainLayout';
+
 const App = () => {
    return (
       <Router>
-         <Header />
-         <Routes>
-            <Route path={HOME} element={<Home />} />
-            <Route path={BLOG} element={<Blog />} />
-            <Route path={CATEGORIES} element={<Categories />}></Route>
-            <Route path={NOT_FOUND} element={<NotFound />} />
-         </Routes>
+          <MainLayout>
+             <Routes>
+                <Route path={HOME} element={<Home />} />
+                <Route path={BLOG} element={<Blog />} />
+                <Route path={CATEGORIES} element={<Categories />}></Route>
+                <Route path={NOT_FOUND} element={<NotFound />} />
+             </Routes>
+          </MainLayout>
       </Router>
    );
 };
