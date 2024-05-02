@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import { BLOG, CATEGORIES, HOME } from '../../constants/pathName';
 
 const Header = () => {
    return (
@@ -23,7 +24,7 @@ const Header = () => {
                   <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                      News
                   </Typography>
-                  <Button component={Link} to={'/home'} sx={{
+                  <Button component={Link} to={HOME} sx={{
                      mr: 1,
                      color: 'silver',
                      backgroundColor: '#ffffff',
@@ -32,7 +33,7 @@ const Header = () => {
                         backgroundColor: 'silver'
                      }
                   }} variant="contained">Home</Button>
-                  <Button component={Link} to={'/product'} sx={{
+                  <Button component={Link} to={BLOG} sx={{
                      mr: 1,
                      color: 'silver',
                      backgroundColor: '#ffffff',
@@ -40,8 +41,8 @@ const Header = () => {
                         color: '#ffffff',
                         backgroundColor: 'silver'
                      }
-                  }} variant="contained">Product</Button>
-                  <Button component={Link} to={'/contact-page'} sx={{
+                  }} variant="contained">Blog</Button>
+                  <Button component={Link} to={CATEGORIES} sx={{
                      mr: 1,
                      color: 'silver',
                      backgroundColor: '#ffffff',
@@ -49,7 +50,7 @@ const Header = () => {
                         color: '#ffffff',
                         backgroundColor: 'silver'
                      }
-                  }} variant="contained">Contact page</Button>
+                  }} variant="contained">Categories</Button>
                </Toolbar>
             </AppBar>
          </Box>
