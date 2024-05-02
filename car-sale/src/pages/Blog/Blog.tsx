@@ -24,9 +24,7 @@ import styles from "./styles.module.css";
 import news1 from "../../assets/imgs/Blog/sidebar/news1.jpg";
 import news2 from "../../assets/imgs/Blog/sidebar/news2.jpg";
 import news3 from "../../assets/imgs/Blog/sidebar/news3.jpg";
-import card1 from "../../assets/imgs/Blog/cards/1.jpg";
-import card2 from "../../assets/imgs/Blog/cards/2.jpg";
-import card3 from "../../assets/imgs/Blog/cards/3.jpg";
+import defaultImage from "../../assets/imgs/Blog/cards/1.jpg";
 import QueryLoader from "../../components/QueryLoader/QueryLoader";
 
 const theme = createTheme({
@@ -85,11 +83,9 @@ const theme = createTheme({
 
 const ariaLabel = { "aria-label": "Search" };
 
-const defaulText: string =
-  "Lorem ipsum potenti fringilla pretium ipsum non blandit vivamus eget nisi non mi iaculis iaculis imperie quiseros sevin elentesque habitant morbi tristique senectus et netus et malesuada the fames ac turpis enesta mauris suscipit misnec est farmen.";
-
 interface Data {
-  id: number;
+  id: string;
+  slug: string;
   image: string;
   dateTimePublish: string;
   name: string;
@@ -98,7 +94,8 @@ interface Data {
 }
 
 function createData(
-  id: number,
+  id: string,
+  slug: string,
   image: string,
   dateTimePublish: string,
   name: string,
@@ -107,6 +104,7 @@ function createData(
 ): Data {
   return {
     id,
+    slug,
     image,
     dateTimePublish,
     name,
@@ -115,33 +113,6 @@ function createData(
   };
 }
 
-const mockData: Data[] = [
-  {
-    id: 1,
-    image: card1,
-    dateTimePublish: "27 Apr, 2024",
-    name: "Documents required for car rental",
-    text: defaulText,
-    isShow: true,
-  },
-  {
-    id: 2,
-    image: card2,
-    dateTimePublish: "25 Apr, 2024",
-    name: "Rental cost of sport and other cars",
-    text: defaulText,
-    isShow: true,
-  },
-  {
-    id: 3,
-    image: card3,
-    dateTimePublish: "23 Apr, 2024",
-    name: "Rental cars how to check driving fines?",
-    text: defaulText,
-    isShow: true,
-  },
-];
-
 export default function Blog() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Data[]>([]);
@@ -149,7 +120,6 @@ export default function Blog() {
   const [newBlogData, setNewBlogData] = useState({
     name: "",
     text: "",
-    image: "",
   });
 
   const blogsList: string = "https://roman.itstep.click/api/Blogs/list";
@@ -181,6 +151,7 @@ export default function Blog() {
   const cards: Data[] = data.map((item) =>
     createData(
       item.id,
+      item.slug,
       item.image,
       item.dateTimePublish,
       item.name,
@@ -195,7 +166,6 @@ export default function Blog() {
     setNewBlogData({
       name: "",
       text: "",
-      image: "",
     });
   };
 
@@ -212,12 +182,11 @@ export default function Blog() {
     }));
   };
 
-  const generateUniqueId = () => uuidv4();
-
   const handleAddPost = () => {
     const newCardData = createData(
-      generateUniqueId(),
-      newBlogData.image,
+      uuidv4(),
+      newBlogData.name + newBlogData.text,
+      defaultImage,
       new Date().toDateString(),
       newBlogData.name,
       newBlogData.text,
@@ -299,22 +268,6 @@ export default function Blog() {
                           { borderColor: "#E24648" },
                       }}
                     />
-                    <TextField
-                      name="image"
-                      label="Image URL"
-                      variant="outlined"
-                      fullWidth
-                      margin="normal"
-                      value={newBlogData.image}
-                      onChange={handleInputChange}
-                      sx={{
-                        "& .MuiInputLabel-root.Mui-focused": {
-                          color: "#E24648",
-                        },
-                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                          { borderColor: "#E24648" },
-                      }}
-                    />
                     <Button
                       variant="contained"
                       sx={{ mt: 2 }}
@@ -333,7 +286,11 @@ export default function Blog() {
                 {data.length > 0 ? (
                   cards.map((card) => {
                     return (
-                      <Card sx={{ maxWidth: "100%", mb: 4 }} key={card.id} className={styles.card}>
+                      <Card
+                        sx={{ maxWidth: "100%", mb: 4 }}
+                        key={card.id}
+                        className={styles.card}
+                      >
                         <Box
                           position="relative"
                           overflow="hidden"
@@ -341,7 +298,7 @@ export default function Blog() {
                         >
                           <CardMedia
                             component="img"
-                            image={card.image}
+                            image={defaultImage}
                             alt="car"
                             className={styles.centeredImage}
                           />
@@ -383,42 +340,6 @@ export default function Blog() {
                     </Typography>
                   </Box>
                 )}
-
-                {/* {mockData.map((card) => {
-                  return (
-                    <Card sx={{ maxWidth: "100%", mb: 4 }} key={card.id}>
-                      <Box style={{ position: "relative", overflow: "hidden" }}>
-                        <CardMedia
-                          component="img"
-                          image={card.image}
-                          alt="car"
-                          className={styles.zoomImg}
-                        />
-                      </Box>
-                      <CardContent>
-                        <Typography variant="caption">
-                          {card.dateTimePublish}
-                        </Typography>
-                        <Typography
-                          gutterBottom
-                          variant="h4"
-                          component="div"
-                          m="10px 0 15px"
-                        >
-                          {card.name}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                          {card.text}
-                        </Typography>
-                      </CardContent>
-                      <CardActions sx={{ pb: 4 }}>
-                        <Button variant="contained" size="large">
-                          Read More
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  );
-                })} */}
               </QueryLoader>
             </Grid>
             <Grid item xs={4}>
