@@ -13,13 +13,14 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Search, ErrorOutline, AddCircleOutline } from "@mui/icons-material/";
 
+
 import styles from "./styles.module.css";
 import news1 from "../../assets/imgs/Blogs/sidebar/news1.jpg";
 import news2 from "../../assets/imgs/Blogs/sidebar/news2.jpg";
 import news3 from "../../assets/imgs/Blogs/sidebar/news3.jpg";
 import defaultImage from "../../assets/imgs/Blogs/cards/1.jpg";
 import QueryLoader from "../../components/QueryLoader/QueryLoader";
-import { blogsList } from "../../constants/crudPath";
+import { blogsList, addNewPost } from "../../constants/crudPath";
 import BlogsCard from "../../components/blogs/Card";
 import BlogsModal from "../../components/blogs/Modal";
 
@@ -158,17 +159,40 @@ function Blogs() {
     setOpenModal(false);
   };
 
-  const handleAddPost = (name: string, text: string) => {
+  const handleAddPost = async (name: string, text: string) => {
+    const currentDate = new Date();
+    const day = currentDate.getDate().toString().padStart(2, "0");
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    const year = currentDate.getFullYear();
+  
     const newCardData = {
       id: uuidv4(),
       slug: name + "_" + text,
       image: defaultImage,
-      dateTimePublish: new Date().toDateString(),
+      dateTimePublish: `${day}.${month}.${year}`,
       name,
       text,
       isShow: true,
     };
-    setData((prevState) => [newCardData, ...prevState]);
+  
+    try {
+      const response = await fetch(addNewPost, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCardData),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to add new post.");
+      }
+  
+      setData((prevState) => [newCardData, ...prevState]);
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
