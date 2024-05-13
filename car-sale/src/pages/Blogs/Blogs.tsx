@@ -168,7 +168,7 @@ function Blogs() {
       text,
       isShow: true,
     };
-    setData((prevState) => [...prevState, newCardData]);
+    setData((prevState) => [newCardData, ...prevState]);
   };
 
   return (
