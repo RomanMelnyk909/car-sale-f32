@@ -8,8 +8,8 @@ import {
   Button,
 } from "@mui/material";
 
-import styles from "./styles.module.css";
-import defaultImage from "../../assets/imgs/Blog/cards/1.jpg";
+import styles from "../../../pages/Blog/styles.module.css";
+import defaultImage from "../../../assets/imgs/Blog/cards/1.jpg";
 
 interface Data {
   id: string;

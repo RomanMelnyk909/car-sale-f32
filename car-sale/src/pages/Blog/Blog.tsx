@@ -8,10 +8,7 @@ import {
   Input,
   Link,
   Grid,
-  Button,
   Divider,
-  Modal,
-  TextField,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Search, ErrorOutline, AddCircleOutline } from "@mui/icons-material/";
@@ -23,7 +20,8 @@ import news3 from "../../assets/imgs/Blog/sidebar/news3.jpg";
 import defaultImage from "../../assets/imgs/Blog/cards/1.jpg";
 import QueryLoader from "../../components/QueryLoader/QueryLoader";
 import { blogsList } from "../../constants/crudPath";
-import BlogsCard from "../../components/BlogsCard/BlogsCard";
+import BlogsCard from "../../components/blogs/Card/Card";
+import BlogsModal from "../../components/blogs/Modal/Modal";
 
 const theme = createTheme({
   components: {
@@ -115,10 +113,6 @@ function Blog() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Data[]>([]);
   const [openModal, setOpenModal] = useState(false);
-  const [newBlogData, setNewBlogData] = useState({
-    name: "",
-    text: "",
-  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -158,39 +152,23 @@ function Blog() {
 
   const handleOpenModal = () => {
     setOpenModal(true);
-
-    setNewBlogData({
-      name: "",
-      text: "",
-    });
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setNewBlogData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleAddPost = () => {
-    const newCardData = createData(
-      uuidv4(),
-      newBlogData.name + newBlogData.text,
-      defaultImage,
-      new Date().toDateString(),
-      newBlogData.name,
-      newBlogData.text,
-      true
-    );
-
+  const handleAddPost = (name: string, text: string) => {
+    const newCardData = {
+      id: uuidv4(),
+      slug: name + '_' + text,
+      image: defaultImage,
+      dateTimePublish: new Date().toDateString(),
+      name,
+      text,
+      isShow: true,
+    };
     setData((prevState) => [...prevState, newCardData]);
-    handleCloseModal();
   };
 
   return (
@@ -211,64 +189,11 @@ function Blog() {
               <IconButton size="large" onClick={handleOpenModal}>
                 <AddCircleOutline fontSize="large" sx={{ color: "#282828" }} />
               </IconButton>
-              <Modal open={openModal} onClose={handleCloseModal}>
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    bgcolor: "background.paper",
-                    boxShadow: 24,
-                    p: 4,
-                    width: 400,
-                    borderRadius: "5px",
-                  }}
-                >
-                  <Typography variant="h6" gutterBottom>
-                    Add New Blog Post
-                  </Typography>
-                  <TextField
-                    name="name"
-                    label="Name"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={newBlogData.name}
-                    onChange={handleInputChange}
-                    sx={{
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "#E24648",
-                      },
-                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                        { borderColor: "#E24648" },
-                    }}
-                  />
-                  <TextField
-                    name="text"
-                    label="Text"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={newBlogData.text}
-                    onChange={handleInputChange}
-                    sx={{
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "#E24648",
-                      },
-                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                        { borderColor: "#E24648" },
-                    }}
-                  />
-                  <Button
-                    variant="contained"
-                    sx={{ mt: 2 }}
-                    onClick={handleAddPost}
-                  >
-                    Add
-                  </Button>
-                </Box>
-              </Modal>
+              <BlogsModal
+                open={openModal}
+                onClose={handleCloseModal}
+                onAddPost={handleAddPost}
+              />
             </Box>
             <Divider
               sx={{ mt: 2, mb: 5, borderBottomWidth: 2, background: "black" }}
@@ -277,7 +202,7 @@ function Blog() {
             <QueryLoader fetching={loading}>
               {data.length > 0 ? (
                 cards.map((card) => {
-                  return <BlogsCard key={card.id} item={card}/>
+                  return <BlogsCard key={card.id} item={card} />;
                 })
               ) : (
                 <Box textAlign="center">
