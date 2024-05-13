@@ -14,14 +14,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Search, ErrorOutline, AddCircleOutline } from "@mui/icons-material/";
 
 import styles from "./styles.module.css";
-import news1 from "../../assets/imgs/Blog/sidebar/news1.jpg";
-import news2 from "../../assets/imgs/Blog/sidebar/news2.jpg";
-import news3 from "../../assets/imgs/Blog/sidebar/news3.jpg";
-import defaultImage from "../../assets/imgs/Blog/cards/1.jpg";
+import news1 from "../../assets/imgs/Blogs/sidebar/news1.jpg";
+import news2 from "../../assets/imgs/Blogs/sidebar/news2.jpg";
+import news3 from "../../assets/imgs/Blogs/sidebar/news3.jpg";
+import defaultImage from "../../assets/imgs/Blogs/cards/1.jpg";
 import QueryLoader from "../../components/QueryLoader/QueryLoader";
 import { blogsList } from "../../constants/crudPath";
-import BlogsCard from "../../components/blogs/Card/Card";
-import BlogsModal from "../../components/blogs/Modal/Modal";
+import BlogsCard from "../../components/blogs/Card";
+import BlogsModal from "../../components/blogs/Modal";
 
 const theme = createTheme({
   components: {
@@ -109,7 +109,7 @@ function createData(
   };
 }
 
-function Blog() {
+function Blogs() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Data[]>([]);
   const [openModal, setOpenModal] = useState(false);
@@ -177,7 +177,7 @@ function Blog() {
         <Grid className={styles.banner} container>
           <Grid item xs={12} md={7}>
             <Typography variant="h1" align="center">
-              Blog
+              Blogs
             </Typography>
           </Grid>
           <Grid item display={{ xs: "none", md: "block" }} md={5}></Grid>
@@ -413,4 +413,4 @@ function Blog() {
   );
 }
 
-export default Blog;
+export default Blogs;

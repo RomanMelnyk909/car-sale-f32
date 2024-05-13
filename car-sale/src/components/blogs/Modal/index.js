@@ -1,3 +1,3 @@
-import Modal from './Modal';
+import BlogsModal from './Modal';
 
-export default Modal;
+export default BlogsModal;
