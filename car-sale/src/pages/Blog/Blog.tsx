@@ -26,6 +26,7 @@ import news2 from "../../assets/imgs/Blog/sidebar/news2.jpg";
 import news3 from "../../assets/imgs/Blog/sidebar/news3.jpg";
 import defaultImage from "../../assets/imgs/Blog/cards/1.jpg";
 import QueryLoader from "../../components/QueryLoader/QueryLoader";
+import { blogsList } from "../../constants/crudPath";
 
 const theme = createTheme({
   components: {
@@ -122,7 +123,7 @@ function Blog() {
     text: "",
   });
 
-  const blogsList: string = "https://roman.itstep.click/api/Blogs/list";
+  
 
   useEffect(() => {
     const fetchData = async () => {

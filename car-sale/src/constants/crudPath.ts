@@ -1,0 +1,1 @@
+export const blogsList: string = "https://roman.itstep.click/api/Blogs/list";
