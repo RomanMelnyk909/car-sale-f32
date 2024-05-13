@@ -25,6 +25,8 @@ const BlogsModal: React.FC<BlogModalProps> = ({ open, onClose, onAddPost }) => {
   const handleAddPost = () => {
     onAddPost(newBlogData.name, newBlogData.text);
     onClose();
+
+    setNewBlogData({ name: "", text: "" });
   };
 
   return (
