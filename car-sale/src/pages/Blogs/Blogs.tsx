@@ -161,7 +161,7 @@ function Blogs() {
   const handleAddPost = (name: string, text: string) => {
     const newCardData = {
       id: uuidv4(),
-      slug: name + '_' + text,
+      slug: name + "_" + text,
       image: defaultImage,
       dateTimePublish: new Date().toDateString(),
       name,
@@ -201,9 +201,13 @@ function Blogs() {
             />
             <QueryLoader fetching={loading}>
               {data.length > 0 ? (
-                cards.map((card) => {
-                  return <BlogsCard key={card.id} item={card} />;
-                })
+                <Grid container spacing={4}>
+                  {cards.map((card) => (
+                    <Grid key={card.id} item xs={12} md={6}>
+                      <BlogsCard item={card} />
+                    </Grid>
+                  ))}
+                </Grid>
               ) : (
                 <Box textAlign="center">
                   <ErrorOutline
