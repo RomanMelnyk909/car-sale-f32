@@ -160,7 +160,7 @@ function SingleBlog() {
                     {blogData?.text}
                   </Typography>
                   <Box textAlign="right">
-                    <Button variant="contained" size="large">
+                    <Button variant="contained" size="large" sx={{mr: 2}}>
                       Edit
                     </Button>
                     <Button variant="contained" size="large">
