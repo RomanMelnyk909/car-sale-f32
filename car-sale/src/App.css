@@ -39,3 +39,14 @@ img{vertical-align: top;}
 
 h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight: 400;}
 /*Обнуление*/
+ 
+/* Color for tabs */
+.MuiTabs-indicator {
+	background-color: red;
+  }
+
+#root {
+	height: 100vh;
+}
+  
+  
