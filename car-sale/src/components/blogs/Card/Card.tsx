@@ -59,6 +59,7 @@ function BlogsCard({ item }: Readonly<BlogsCardProps>) {
           size="large"
           onClick={() => {
             navigator(singleBlogPathCreator(item?.slug));
+            window.scrollTo(0, 0);
           }}
         >
           Read More
