@@ -28,7 +28,7 @@ const Footer = () => {
             alignItems="center"
             justifyContent="space-between"
             borderTop="3px solid #E24648"
-            padding='55px 0px 40px 0px'
+            padding='25px 0px 40px 0px'
          >
 
             <Grid container >
@@ -40,7 +40,7 @@ const Footer = () => {
                   padding='15px'
                   >
                   <img src={Logo} alt="Main logo" />
-                  <Box sx={{'a': {color: '#000', fontSize: '18px', padding: '0px 25px'}}}>
+                  <Box sx={{'a': {color: '#000', fontSize: '18px', margin: '0px 25px', "&:hover": { borderBottom: "2px solid #E24648"}}}}>
                      <Link to='/'>Services</Link>
                      <Link to='/'>Online Store</Link>
                      <Link to='/'>Partnership</Link>
@@ -55,7 +55,7 @@ const Footer = () => {
                   alignItems='center'
                   padding='15px'
                >
-                  <Box sx={{'img': {padding: '0px 10px'}}} padding='0px 10px'>
+                  <Box sx={{'img': {padding: '0px 10px'}}} margin='0px -10px'>
                      <Link to='/'>
                         <img src={Facebook} alt="Facebook icon" />
                      </Link>
@@ -86,7 +86,7 @@ const Footer = () => {
          <Box
             borderTop='1px solid #E0E0E0'
             color='#BDBDBD'
-            padding="20px 0px"
+            padding="15px 0px"
          >
             <Box 
                display="flex"
