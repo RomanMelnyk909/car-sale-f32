@@ -9,7 +9,7 @@ import {
   Divider,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ErrorOutline, AddCircleOutline } from "@mui/icons-material/";
+import { AddCircleOutline } from "@mui/icons-material/";
 
 import styles from "./styles.module.css";
 import defaultImage from "../../assets/imgs/Blogs/cards/1.jpg";
@@ -18,6 +18,7 @@ import { blogsList, addNewPost } from "../../constants/crudPath";
 import BlogsCard from "../../components/blogs/Card";
 import BlogsModal from "../../components/blogs/Modal";
 import BlogsSidebar from "../../components/blogs/Sidebar";
+import Oops from "../../components/blogs/Oops";
 
 const theme = createTheme({
   components: {
@@ -157,7 +158,7 @@ function Blogs() {
     const day = currentDate.getDate().toString().padStart(2, "0");
     const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
     const year = currentDate.getFullYear();
-  
+
     const newCardData = {
       id: uuidv4(),
       slug: name + "_" + text,
@@ -167,7 +168,7 @@ function Blogs() {
       text,
       isShow: true,
     };
-  
+
     try {
       const response = await fetch(addNewPost, {
         method: "POST",
@@ -176,11 +177,11 @@ function Blogs() {
         },
         body: JSON.stringify(newCardData),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to add new post.");
       }
-  
+
       setData((prevState) => [newCardData, ...prevState]);
       handleCloseModal();
     } catch (error) {
@@ -200,7 +201,7 @@ function Blogs() {
           <Grid item display={{ xs: "none", md: "block" }} md={5}></Grid>
         </Grid>
         <Grid container spacing={4}>
-          <Grid item xs={8}>
+          <Grid item xs={12} md={8}>
             <Box display="flex" justifyContent="space-between">
               <Typography variant="h4">Latest News</Typography>
               <IconButton size="large" onClick={handleOpenModal}>
@@ -226,22 +227,12 @@ function Blogs() {
                   ))}
                 </Grid>
               ) : (
-                <Box textAlign="center">
-                  <ErrorOutline
-                    sx={{ fontSize: "50px", color: "text.secondary" }}
-                  />
-                  <Typography variant="h6" color="text.secondary">
-                    Oops..!
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    Something went wrong. Please try again later.
-                  </Typography>
-                </Box>
+                <Oops />
               )}
             </QueryLoader>
           </Grid>
-          <Grid item xs={4}>
-              <BlogsSidebar />
+          <Grid item display={{ xs: "none", md: "block" }} xs={0} md={4}>
+            <BlogsSidebar />
           </Grid>
         </Grid>
       </Container>

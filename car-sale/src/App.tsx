@@ -1,12 +1,12 @@
-import "./App.css";
-import NotFound from "./pages/NotFound/NotFound";
-import Home from "./components/Home/Home";
-import Categories from "./pages/Categories/Categories";
-import Blogs from "./pages/Blogs";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { HOME, NOT_FOUND, BLOGS, CATEGORIES } from "./constants/pathName";
-import Header from "./components/Header/Header";
+import { HOME, NOT_FOUND, BLOGS, CATEGORIES, SINGLE_BLOG } from "./constants/pathName";
 import MainLayout from "./components/MainLayout";
+import Home from "./components/Home/Home";
+import Blogs from "./pages/Blogs";
+import SingleBlog from "./pages/SingleBlog";
+import Categories from "./pages/Categories/Categories";
+import NotFound from "./pages/NotFound/NotFound";
+import "./App.css";
 
 const App = () => {
   return (
@@ -15,6 +15,7 @@ const App = () => {
         <Routes>
           <Route path={HOME} element={<Home />} />
           <Route path={BLOGS} element={<Blogs />} />
+          <Route path={SINGLE_BLOG} element={<SingleBlog />} />
           <Route path={CATEGORIES} element={<Categories />}></Route>
           <Route path={NOT_FOUND} element={<NotFound />} />
         </Routes>
