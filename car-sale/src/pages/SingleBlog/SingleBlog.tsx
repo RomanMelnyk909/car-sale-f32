@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { get } from "lodash";
+
 import { getBlogBySlug } from "../../constants/crudPath";
 import defaultImage from "../../assets/imgs/Blogs/cards/1.jpg";
 import QueryLoader from "../../components/QueryLoader/QueryLoader";
@@ -64,33 +66,13 @@ interface Data {
   dateTimePublish: string;
 }
 
-function createData(
-  id: number,
-  name: string,
-  text: string,
-  image: string,
-  slug: string,
-  isShow: boolean,
-  dateTimePublish: string
-): Data {
-  return {
-    id,
-    name,
-    text,
-    image,
-    slug,
-    isShow,
-    dateTimePublish,
-  };
-}
-
 function SingleBlog() {
   const { slug } = useParams();
-  const [data, setData] = useState<Data | null>(null);
+  const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    setTimeout(async () => {
       try {
         const response = await fetch(`${getBlogBySlug}/${slug}`);
 
@@ -98,32 +80,16 @@ function SingleBlog() {
           throw new Error("Network response was not success.");
         }
 
-        setTimeout(async () => {
-          const result = await response.json();
+        const result = await response.json();
 
-          setData(result);
-          setLoading(false);
-        }, 1000);
+        setData(result);
+        setLoading(false);
       } catch (error) {
         console.error("Error:", error);
         setLoading(false);
       }
-    };
-
-    fetchData();
+    }, 1000);
   }, [slug]);
-
-  const blogData: Data | null = data
-    ? createData(
-        data.id,
-        data.name,
-        data.text,
-        data.image,
-        data.slug,
-        data.isShow,
-        data.dateTimePublish
-      )
-    : null;
 
   return (
     <ThemeProvider theme={theme}>
@@ -149,18 +115,18 @@ function SingleBlog() {
                     m={1}
                   >
                     <Typography variant="h4" component="h4">
-                      {blogData?.name}
+                      {get(data, "name", "N/A")}
                     </Typography>
                     <Typography variant="caption" component="span" color="grey">
-                      {blogData?.dateTimePublish}
+                      {get(data, "dateTimePublish", "N/A")}
                     </Typography>
                   </Box>
                   <Divider />
                   <Typography variant="body1" m={1}>
-                    {blogData?.text}
+                    {get(data, "text", "N/A")}
                   </Typography>
                   <Box textAlign="right">
-                    <Button variant="contained" size="large" sx={{mr: 2}}>
+                    <Button variant="contained" size="large" sx={{ mr: 2 }}>
                       Edit
                     </Button>
                     <Button variant="contained" size="large">
