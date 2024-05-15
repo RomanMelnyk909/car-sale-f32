@@ -4,33 +4,35 @@ import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 interface BlogModalProps {
   open: boolean;
   onClose: () => void;
-  onAddPost: (name: string, text: string) => void;
+  onEditBlog: (name: string, text: string) => void;
+  initialData: { name: string; text: string };
 }
 
 const SingleBlogModal: React.FC<BlogModalProps> = ({
   open,
   onClose,
-  onAddPost,
+  onEditBlog,
+  initialData,
 }) => {
-  const [newBlogData, setNewBlogData] = useState({
-    name: "",
-    text: "",
+  const [editBlogData, setEditBlogData] = useState({
+    name: initialData.name || "",
+    text: initialData.text || "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setNewBlogData((prevState) => ({
+    setEditBlogData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleAddPost = () => {
-    onAddPost(newBlogData.name, newBlogData.text);
+  const handleEditBlog = () => {
+    onEditBlog(editBlogData.name, editBlogData.text);
     onClose();
 
-    setNewBlogData({ name: "", text: "" });
+    setEditBlogData({ name: "", text: "" });
   };
 
   return (
@@ -57,7 +59,7 @@ const SingleBlogModal: React.FC<BlogModalProps> = ({
           variant="outlined"
           fullWidth
           margin="normal"
-          value={newBlogData.name}
+          value={editBlogData.name}
           onChange={handleInputChange}
           sx={{
             "& .MuiInputLabel-root.Mui-focused": {
@@ -75,7 +77,7 @@ const SingleBlogModal: React.FC<BlogModalProps> = ({
           margin="normal"
           multiline
           rows={5}
-          value={newBlogData.text}
+          value={editBlogData.text}
           onChange={handleInputChange}
           sx={{
             "& .MuiInputLabel-root.Mui-focused": {
@@ -86,7 +88,7 @@ const SingleBlogModal: React.FC<BlogModalProps> = ({
           }}
         />
         <Box display="flex" justifyContent="right">
-          <Button variant="contained" onClick={handleAddPost} sx={{ mt: 2 }}>
+          <Button variant="contained" onClick={handleEditBlog} sx={{ mt: 2 }}>
             Save
           </Button>
         </Box>

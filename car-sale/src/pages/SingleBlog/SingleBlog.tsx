@@ -35,6 +35,9 @@ const theme = createTheme({
         h5: {
           fontSize: 30,
         },
+        body1: {
+          fontWeight: 400,
+        },
         caption: {
           fontWeight: 400,
           fontSize: "16px",
@@ -179,7 +182,7 @@ function SingleBlog() {
                   <Box
                     display="flex"
                     justifyContent="space-between"
-                    alignItems="center"
+                    alignItems="baseline"
                     m={1}
                   >
                     <Typography variant="h4" component="h4">
@@ -205,7 +208,8 @@ function SingleBlog() {
                     <SingleBlogModal
                       open={openModal}
                       onClose={handleCloseModal}
-                      onAddPost={handleEditBlog}
+                      onEditBlog={handleEditBlog}
+                      initialData={{name: get(data, "name", "N/A"), text: get(data, "text", "N/A")}}
                     />
                     <Button variant="contained" size="large" onClick={handleDeleteBlog}>
                       Delete
