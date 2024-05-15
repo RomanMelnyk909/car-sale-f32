@@ -2,13 +2,20 @@ import { useState, SyntheticEvent } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
+import { toWords } from 'number-to-words';
+import BasicModal from '../Modal/Modal';
 
-export default function CategoryTabs() {
+export default function CategoryTabs({ categoryNames }: { categoryNames: [] }) {
   const [value, setValue] = useState('one');
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
+  const openModalHandler = () => setShowModal(true);
+  const closeModalHandler = () => setShowModal(false)
 
   return (
     <Box
@@ -28,13 +35,12 @@ export default function CategoryTabs() {
           indicatorColor="red"
           aria-label="secondary tabs example"
         >
-          <Tab value="one" label="ALL" />
-          <Tab value="two" label="ECU TUNING" />
-          <Tab value="three" label="CODING" />
-          <Tab value="four" label="ELECTRONICS" />
-          <Tab value="five" label="EXTERIORS" />
-          <Tab value="six" label="INTERIORS" />
+          {categoryNames.map((cat, index) => (
+            <Tab key={cat?.id} value={toWords(index)} label={cat?.title} />
+          ))}
         </Tabs>
+        <Button variant="outlined" onClick={openModalHandler} sx={{ml: '40%', mt: 1}}>ADD CATEGORY</Button>
+        {showModal && <BasicModal isOpen={showModal} onClose={closeModalHandler} />}
       </Box>
     </Box>
   );
