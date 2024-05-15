@@ -1,5 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from "yup";
+
+const validationSchema = yup.object().shape({
+  name: yup
+    .string()
+    .min(1, "Name length must be greater than one character.")
+    .required("Name is required"),
+  text: yup
+    .string()
+    .min(1, "Text length must be greater than one character.")
+    .required("Text is required"),
+});
 
 interface BlogModalProps {
   open: boolean;
@@ -14,25 +27,9 @@ const SingleBlogModal: React.FC<BlogModalProps> = ({
   onEditBlog,
   initialData,
 }) => {
-  const [editBlogData, setEditBlogData] = useState({
+  const initialValues = {
     name: initialData.name || "",
     text: initialData.text || "",
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setEditBlogData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleEditBlog = () => {
-    onEditBlog(editBlogData.name, editBlogData.text);
-    onClose();
-
-    setEditBlogData({ name: "", text: "" });
   };
 
   return (
@@ -53,45 +50,66 @@ const SingleBlogModal: React.FC<BlogModalProps> = ({
         <Typography variant="h5" gutterBottom>
           Edit Blog
         </Typography>
-        <TextField
-          name="name"
-          label="Name"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={editBlogData.name}
-          onChange={handleInputChange}
-          sx={{
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#E24648",
-            },
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-              { borderColor: "#E24648" },
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={(values, { resetForm }) => {
+            onEditBlog(values.name, values.text);
+            onClose();
+            resetForm();
           }}
-        />
-        <TextField
-          name="text"
-          label="Text"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          multiline
-          rows={5}
-          value={editBlogData.text}
-          onChange={handleInputChange}
-          sx={{
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#E24648",
-            },
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-              { borderColor: "#E24648" },
-          }}
-        />
-        <Box display="flex" justifyContent="right">
-          <Button variant="contained" onClick={handleEditBlog} sx={{ mt: 2 }}>
-            Save
-          </Button>
-        </Box>
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Field
+                as={TextField}
+                name="name"
+                label="Name"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                error={<ErrorMessage name="name" />}
+                helperText={<ErrorMessage name="name" />}
+                sx={{
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#E24648",
+                  },
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                    { borderColor: "#E24648" },
+                }}
+              />
+              <Field
+                as={TextField}
+                name="text"
+                label="Text"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                multiline
+                rows={5}
+                error={<ErrorMessage name="text" />}
+                helperText={<ErrorMessage name="text" />}
+                sx={{
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#E24648",
+                  },
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                    { borderColor: "#E24648" },
+                }}
+              />
+              <Box display="flex" justifyContent="right">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled={isSubmitting}
+                  sx={{ mt: 2 }}
+                >
+                  Save
+                </Button>
+              </Box>
+            </Form>
+          )}
+        </Formik>
       </Box>
     </Modal>
   );
