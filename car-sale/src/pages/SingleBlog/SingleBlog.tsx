@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { get } from "lodash";
 
 import {
   Box,
@@ -11,12 +12,11 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { get } from "lodash";
-
-import { getBlogBySlug } from "../../constants/crudPath";
+import QueryLoader from "../../components/QueryLoader";
+import Oops from "../../components/blogs/Oops";
+import SingleBlogModal from "../../components/SingleBlog/Modal";
+import { getBlogBySlug, editBlog } from "../../constants/crudPath";
 import defaultImage from "../../assets/imgs/Blogs/cards/1.jpg";
-import QueryLoader from "../../components/QueryLoader/QueryLoader";
-import Oops from "../../components/blogs/Oops/Oops";
 
 const theme = createTheme({
   components: {
@@ -31,6 +31,9 @@ const theme = createTheme({
         },
         h4: {
           fontSize: 36,
+        },
+        h5: {
+          fontSize: 30,
         },
         caption: {
           fontWeight: 400,
@@ -57,7 +60,7 @@ const theme = createTheme({
 });
 
 interface Data {
-  id: number;
+  id: number | string;
   name: string;
   text: string;
   image: string;
@@ -70,6 +73,7 @@ function SingleBlog() {
   const { slug } = useParams();
   const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     setTimeout(async () => {
@@ -90,6 +94,50 @@ function SingleBlog() {
       }
     }, 1000);
   }, [slug]);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleEditBlog = async (name: string, text: string) => {
+    const currentDate = new Date();
+    const day = currentDate.getDate().toString().padStart(2, "0");
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    const year = currentDate.getFullYear();
+
+    const editBlogData = {
+      id: get(data, "id", "N/A"),
+      slug: `${name}_${day}.${month}.${year}`,
+      image: defaultImage,
+      dateTimePublish: `${day}.${month}.${year}`,
+      name,
+      text,
+      isShow: true,
+    };
+
+    try {
+      const response = await fetch(editBlog, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editBlogData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to edit blog.");
+      }
+
+      setData(editBlogData);
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -126,9 +174,19 @@ function SingleBlog() {
                     {get(data, "text", "N/A")}
                   </Typography>
                   <Box textAlign="right">
-                    <Button variant="contained" size="large" sx={{ mr: 2 }}>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      sx={{ mr: 2 }}
+                      onClick={handleOpenModal}
+                    >
                       Edit
                     </Button>
+                    <SingleBlogModal
+                      open={openModal}
+                      onClose={handleCloseModal}
+                      onAddPost={handleEditBlog}
+                    />
                     <Button variant="contained" size="large">
                       Delete
                     </Button>
