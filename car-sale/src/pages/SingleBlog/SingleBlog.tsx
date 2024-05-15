@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { get } from "lodash";
 
 import {
@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import QueryLoader from "../../components/QueryLoader";
 import Oops from "../../components/blogs/Oops";
 import SingleBlogModal from "../../components/SingleBlog/Modal";
-import { getBlogBySlug, editBlog } from "../../constants/crudPath";
+import { getBlogBySlug, editBlog, deleteBlog } from "../../constants/crudPath";
 import defaultImage from "../../assets/imgs/Blogs/cards/1.jpg";
 
 const theme = createTheme({
@@ -71,6 +71,7 @@ interface Data {
 
 function SingleBlog() {
   const { slug } = useParams();
+  const navigate = useNavigate()
   const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
@@ -139,6 +140,25 @@ function SingleBlog() {
     }
   };
 
+  const handleDeleteBlog = async () => {
+    try {
+      const response = await fetch(`${deleteBlog}/${get(data, "id", "N/A")}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete blog.");
+      }
+
+      navigate("/blogs");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="xl">
@@ -187,7 +207,7 @@ function SingleBlog() {
                       onClose={handleCloseModal}
                       onAddPost={handleEditBlog}
                     />
-                    <Button variant="contained" size="large">
+                    <Button variant="contained" size="large" onClick={handleDeleteBlog}>
                       Delete
                     </Button>
                   </Box>
