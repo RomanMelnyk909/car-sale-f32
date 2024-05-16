@@ -32,7 +32,7 @@ function BlogsCard({ item }: Readonly<BlogsCardProps>) {
 
   return (
     <Card
-      sx={{ maxWidth: "100%", mb: 4 }}
+      sx={{ maxWidth: "100%", mb: 4, maxHeight: "800px" }}
       key={item.id}
       className={styles.card}
     >
@@ -49,7 +49,7 @@ function BlogsCard({ item }: Readonly<BlogsCardProps>) {
         <Typography gutterBottom variant="h4" component="div" m="10px 0 15px">
           {item.name}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography noWrap variant="body1" color="text.secondary">
           {item.text}
         </Typography>
       </CardContent>
