@@ -59,7 +59,7 @@ const Header = () => {
                         color: '#ffffff',
                         backgroundColor: 'silver'
                      }
-                  }} variant="contained">Product</Button>
+                  }} variant="contained">Products</Button>
                </Toolbar>
             </AppBar>
          </Box>
