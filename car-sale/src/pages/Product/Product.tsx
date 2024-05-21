@@ -1,5 +1,6 @@
 import { Box, Grid } from "@mui/material"
 import ProductItem from "../../components/ProductItem"
+import ProductsTable from "../../components/ProductsTable/ProductsTable"
 
 
 
@@ -99,7 +100,7 @@ const products: CarsList[] = [
 
 export const Product = () => {
    return (
-      <Box padding='clamp(25px, 4vw, 120px)' display='flex' justifyContent="center">
+      <Box padding='clamp(25px, 4vw, 120px)' display='flex' justifyContent="center" flexDirection="column">
 
          <Grid container spacing={6}>
             {products.map((product: CarsList) => (
@@ -108,7 +109,9 @@ export const Product = () => {
                </Grid>
             ))}
          </Grid>
-
+            <Box>
+               <ProductsTable />
+            </Box>
       </Box>
    )
 }
