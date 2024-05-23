@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import CategoryTabs from '../../components/category/categoryTab';
 import { CategoryBox } from '../../components/category/categoryBox';
+import CategoriesTable from '../../components/category/Table';
 
 export const Categories = () => {
   return (
@@ -19,6 +20,7 @@ export const Categories = () => {
       <CategoryBox categoryName="ELECTRONICS" />
       <CategoryBox categoryName="EXTERIORS" />
       <CategoryBox categoryName="INTERIORS" />
+      <CategoriesTable />
     </Box>
   );
 };
