@@ -1,8 +1,7 @@
 import { Box, Grid } from "@mui/material"
 import ProductItem from "../../components/ProductItem"
 import ProductsTable from "../../components/ProductsTable/ProductsTable"
-
-
+import AddNewProduct from "../../components/class-component/AddNewProduct"
 
 type CarsList = {
    id: number
@@ -109,6 +108,9 @@ export const Product = () => {
                </Grid>
             ))}
          </Grid>
+         <Box>
+            <AddNewProduct />
+         </Box>
             <Box>
                <ProductsTable />
             </Box>
