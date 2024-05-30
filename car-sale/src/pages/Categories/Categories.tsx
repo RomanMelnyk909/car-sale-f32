@@ -1,9 +1,10 @@
 import { Box } from '@mui/material';
 import CategoryTabs from '../../components/category/categoryTab';
-import { CategoryBox } from '../../components/category/CategoryBox';
+import { CategoryBox } from '../../components/category/categoryBox';
 import { useEffect, useState } from 'react';
 import { categoriesList } from '../../constants/crudPath';
 import QueryLoader from '../../components/QueryLoader/QueryLoader';
+import CategoriesTable from '../../components/category/Table';
 
 export interface Categories {
   id: number;
@@ -63,6 +64,7 @@ export const Categories = () => {
   return (
     <QueryLoader fetching={isFetching}>
       <Box
+      maxWidth="lg"
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -79,6 +81,7 @@ export const Categories = () => {
           />
         ))}
       </Box>
+      <CategoriesTable />
     </QueryLoader>
   );
 };

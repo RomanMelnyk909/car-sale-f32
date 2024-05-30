@@ -35,7 +35,7 @@ export const CategoryBox = ({
   return (
     <Box
       sx={{
-        maxWidth: '1680px',
+        maxWidth: 'lg',
         marginTop: 2,
         padding: 3,
         border: 1.5,
