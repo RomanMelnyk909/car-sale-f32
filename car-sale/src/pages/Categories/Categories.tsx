@@ -1,28 +1,88 @@
 import { Box } from '@mui/material';
 import CategoryTabs from '../../components/category/categoryTab';
-import { CategoryBox } from '../../components/category/categoryBox';
+import { CategoryBox } from '../../components/category/CategoryBox';
+import { useEffect, useState } from 'react';
+import { categoriesList } from '../../constants/crudPath';
+import QueryLoader from '../../components/QueryLoader/QueryLoader';
 import CategoriesTable from '../../components/category/Table';
 
+export interface Categories {
+  id: number;
+  title: string;
+  urlSlug: string;
+  priority: number;
+  image: string;
+}
+type CategoriesArr = Categories[];
+
 export const Categories = () => {
+  const [isFetching, setIsFetching] = useState(true);
+  const [categories, setCategories] = useState<undefined | CategoriesArr>(
+    undefined
+  );
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(categoriesList);
+      if (!response.ok) {
+        throw new Error('Network request failed');
+      }
+      const result = await response.json();
+      console.log(result);
+      setCategories(result);
+      setIsFetching(false);
+    } catch (error) {
+      console.log(error);
+      setIsFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCategoriesAndListenForChanges = async () => {
+      setIsFetching(true);
+      await fetchData();
+
+      const intervalId = setInterval(async () => {
+        try {
+          const response = await fetch(categoriesList);
+          if (!response.ok) {
+            throw new Error('Network request failed');
+          }
+          const result = await response.json();
+          console.log(result);
+          setCategories(result);
+        } catch (error) {
+          console.log(error);
+        }
+      }, 5000);
+      return () => clearInterval(intervalId);
+    };
+
+    fetchCategoriesAndListenForChanges();
+  }, [categoriesList]);
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+    <QueryLoader fetching={isFetching}>
+      <Box
       maxWidth="lg"
-    >
-      <CategoryTabs />
-      <CategoryBox categoryName="ALL" />
-      <CategoryBox categoryName="ECU TUNING" />
-      <CategoryBox categoryName="CODING" />
-      <CategoryBox categoryName="ELECTRONICS" />
-      <CategoryBox categoryName="EXTERIORS" />
-      <CategoryBox categoryName="INTERIORS" />
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CategoryTabs categoryNames={categories} />
+        {categories?.map((cat, index) => (
+          <CategoryBox
+            key={cat.id}
+            categoryName={cat.title}
+            categoryId={cat.id}
+          />
+        ))}
+      </Box>
       <CategoriesTable />
-    </Box>
+    </QueryLoader>
   );
 };
 
