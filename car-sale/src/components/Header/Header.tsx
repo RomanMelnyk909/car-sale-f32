@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
-import { BLOGS, CATEGORIES, HOME } from '../../constants/pathName';
+import { BLOGS, CATEGORIES, HOME, PRODUCT } from '../../constants/pathName';
 
 const Header = () => {
    return (
@@ -51,6 +51,15 @@ const Header = () => {
                         backgroundColor: 'silver'
                      }
                   }} variant="contained">Categories</Button>
+                  <Button component={Link} to={PRODUCT} sx={{
+                     mr: 1,
+                     color: 'silver',
+                     backgroundColor: '#ffffff',
+                     '&:hover': {
+                        color: '#ffffff',
+                        backgroundColor: 'silver'
+                     }
+                  }} variant="contained">Products</Button>
                </Toolbar>
             </AppBar>
          </Box>

@@ -221,7 +221,7 @@ function Blogs() {
               {data.length > 0 ? (
                 <Grid container spacing={4}>
                   {cards.map((card) => (
-                    <Grid key={card.id} item xs={12} md={6}>
+                    <Grid key={card.id} item xs={12} md={6} >
                       <BlogsCard item={card} />
                     </Grid>
                   ))}

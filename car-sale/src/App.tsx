@@ -128,7 +128,6 @@ const App = () => {
           <Route path={SINGLE_BLOG} element={<SingleBlog />} />
           <Route path={CATEGORIES} element={<Categories />}></Route>
           <Route path={PRODUCT} element={<Product />} />
-
           <Route path={NOT_FOUND} element={<NotFound />} />
         </Routes>
       </MainLayout>
