@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import CategoryTabs from '../../components/category/categoryTab';
-import { CategoryBox } from '../../components/category/CategoryBox';
+import { CategoryBox } from '../../components/category/categoryBox';
 import { useEffect, useState } from 'react';
 import { categoriesList } from '../../constants/crudPath';
 import QueryLoader from '../../components/QueryLoader/QueryLoader';
