@@ -99,11 +99,10 @@ const products: CarsList[] = [
 
 export const Product = () => {
    return (
-      <Box padding='clamp(25px, 4vw, 120px)' display='flex' justifyContent="center" flexDirection="column">
-
+      <Box display='flex' justifyContent="center" flexDirection="column">
          <Grid container spacing={6}>
             {products.map((product: CarsList) => (
-               <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
+               <Grid key={product.name} item xs={12} sm={6} md={6} lg={4} xl={3}>
                   <ProductItem productName={product.name} />
                </Grid>
             ))}

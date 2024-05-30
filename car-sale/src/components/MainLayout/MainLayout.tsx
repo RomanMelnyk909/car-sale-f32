@@ -4,9 +4,9 @@ import Footer from "../Footer/index.js";
 
 const MainLayout = ({ children }) => {
     return (
-        <Box sx={{ height: '100%' }}>
+        <Box display="flex" flexDirection="column" minHeight="100%" alignItems="center">
             <Header />
-                <Box sx={{ height: '100%' }}>
+                <Box display="flex" flexDirection="column" flex="1 1 auto" maxWidth="lg" width="100%" marginY={7}>
                     { children }
                 </Box>
             <Footer />

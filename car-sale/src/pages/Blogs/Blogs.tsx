@@ -191,7 +191,7 @@ function Blogs() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="xl">
+      <Container maxWidth="lg" sx={{width: "100%", p: "0 !important"}}>
         <Grid className={styles.banner} container>
           <Grid item xs={12} md={7}>
             <Typography variant="h1" align="center">

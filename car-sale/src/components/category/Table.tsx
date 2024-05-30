@@ -204,7 +204,7 @@ function CategoriesTable() {
   );
 
   return (
-    <Container>
+    <Container sx={{mt: 5, p: "0 !important"}}>
       <QueryLoader fetching={loading}>
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "100%", mb: 2 }}>

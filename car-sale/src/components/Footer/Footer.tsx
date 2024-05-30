@@ -15,9 +15,9 @@ const Footer = () => {
 
    return (
       <Box
+         maxWidth="lg"
          sx={{
             fontFamily:'"Titillium Web", sans-serif',
-            padding:"0px 123px",
             'p':{
                fontSize:'clamp(11px,1.8vw,16px)'
             }

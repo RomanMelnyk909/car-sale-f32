@@ -12,6 +12,7 @@ export const Categories = () => {
         alignItems: 'center',
         justifyContent: 'center',
       }}
+      maxWidth="lg"
     >
       <CategoryTabs />
       <CategoryBox categoryName="ALL" />
